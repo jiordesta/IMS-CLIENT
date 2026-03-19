@@ -1,4 +1,3 @@
-import { OrderStatus, OrderType, TransactionStatus } from "../../libs/enums";
 import { getValueByPath } from "../../libs/utils";
 import { ModalAction, useModal } from "../hooks/UseModal";
 import TableTypeValue from "../TableTypeValue";
@@ -8,7 +7,7 @@ type DisplayModalProps = {
 	payload?: any;
 };
 
-export default function DisplayModal({ action, payload }: DisplayModalProps) {
+export default function DisplayModal({ payload }: DisplayModalProps) {
 	const { closeModal } = useModal();
 
 	const { items, displayHeaders, title } = payload;

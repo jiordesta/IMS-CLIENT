@@ -6,7 +6,7 @@ import {
 	fetchAllTransactions,
 	setTransactionAsDone,
 } from "../../configs/redux/reducers/transaction";
-import { OrderStatus, OrderType, TransactionStatus } from "../../libs/enums";
+import { OrderType, TransactionStatus } from "../../libs/enums";
 import { ModalAction, ModalType, useModal } from "../hooks/UseModal";
 import toast from "react-hot-toast";
 import TableTypeValue from "../TableTypeValue";
