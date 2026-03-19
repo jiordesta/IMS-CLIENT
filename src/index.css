@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@theme {
+	--color-c1: #222831;
+	--color-c2: #393e46;
+	--color-c3: #00adb5;
+	--color-c4: #eeeeee;
+}
+
+@layer base {
+	body {
+		@apply bg-c2 font-mono text-c4;
+	}
+}
+
+.glowText {
+	text-shadow: 0 0 10px;
+}
+
+.glowBox {
+	box-shadow: 0 0 10px #00adb5;
+}
+
+/* Chrome, Safari, Edge */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+	-moz-appearance: textfield;
+}
+
+/* Style the scrollbar */
+::-webkit-scrollbar {
+	width: 2px;
+	height: 2px;
+}
+/* Track */
+::-webkit-scrollbar-track {
+	background: #00000000;
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: #00adb5;
+}
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+	background: #eeeeee;
+}
