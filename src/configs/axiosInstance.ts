@@ -1,6 +1,6 @@
 import axios from "axios";
 export const axiosInstance = axios.create({
-  baseURL: "http://localhost:3000/",
-  timeout: 50000,
-  withCredentials: true,
+	baseURL: import.meta.env.VITE_BASE_URL,
+	timeout: 50000,
+	withCredentials: true,
 });
