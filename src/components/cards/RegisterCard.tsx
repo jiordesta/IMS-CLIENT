@@ -24,9 +24,9 @@ export default function RegisterCard({
 	const [form, setForm] = useState(registrationForm);
 
 	return (
-		<div className="bg-c1 p-6 rounded-2xl w-[20%] text-c4 drop-shadow-2xl">
-			<div className="mb-8 bg-c2/50 rounded-lg p-4">
-				<h1 className="font-bold w-full text-center text-2xl tracking-widest">
+		<div className="bg-c1 p-4 md:pb-5 lg:p-6 rounded-2xl w-full md:w-[50%] lg:w-[20%] text-c4 drop-shadow-2xl">
+			<div className="mb-8 bg-c2/50 rounded-lg p-2 md:p-3 lg:p-4">
+				<h1 className="font-bold w-full text-center text-lg md:text-xl lg:text-2xl lg:tracking-widest">
 					REGISTRATION
 				</h1>
 			</div>

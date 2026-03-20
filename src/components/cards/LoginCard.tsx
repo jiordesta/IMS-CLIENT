@@ -21,7 +21,7 @@ export default function LoginCard({
 	const [form, setForm] = useState(loginForm);
 
 	return (
-		<div className="bg-c1 p-6 rounded-2xl w-[20%] text-c4 drop-shadow-2xl">
+		<div className="bg-c1 p-6 rounded-2xl w-full md:w-[50%] lg:w-[20%] text-c4 drop-shadow-2xl">
 			<div className="mb-8 bg-c2/50 rounded-lg p-4">
 				<h1 className="font-bold w-full text-center text-2xl tracking-widest">
 					LOGIN

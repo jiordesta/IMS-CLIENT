@@ -51,7 +51,7 @@ export default function Authentication() {
 
 	return (
 		<GlobalLayout>
-			<div className="flex justify-center items-center w-full h-full">
+			<div className="flex justify-center items-center p-4 w-full h-full">
 				{(AUTHACTIONS.LOGIN === action ||
 					action === undefined) && (
 					<LoginCard
