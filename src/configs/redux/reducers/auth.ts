@@ -69,13 +69,17 @@ const authenticationSlice = createSlice({
 			})
 			.addCase(authenticate.pending, (state) => {
 				state.isFetchingUser = true;
+				// state = JSON.parse(localStorage.getItem("user") || "");
 			})
 			.addCase(authenticate.fulfilled, (state, action) => {
 				state.isFetchingUser = false;
 				state.user = action.payload;
+
+				// localStorage.setItem("auth", JSON.stringify(state));
 			})
 			.addCase(authenticate.rejected, (state) => {
 				state.isFetchingUser = false;
+				// state = JSON.parse(localStorage.getItem("auth") || "");
 			});
 	},
 });

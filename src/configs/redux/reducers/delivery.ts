@@ -27,13 +27,20 @@ const deliverySlice = createSlice({
 		builder
 			.addCase(fetchAllDeliveries.pending, (state) => {
 				state.showLoading = true;
+				// state = JSON.parse(
+				// 	localStorage.getItem("delivery") || "",
+				// );
 			})
 			.addCase(fetchAllDeliveries.fulfilled, (state, action) => {
 				state.deliveries = action.payload;
 				state.showLoading = false;
+				// localStorage.setItem("delivery", JSON.stringify(state));
 			})
 			.addCase(fetchAllDeliveries.rejected, (state) => {
 				state.showLoading = false;
+				// state = JSON.parse(
+				// 	localStorage.getItem("delivery") || "",
+				// );
 			})
 			.addCase(createDelivery.pending, (_state) => {})
 			.addCase(createDelivery.fulfilled, (state, action) => {

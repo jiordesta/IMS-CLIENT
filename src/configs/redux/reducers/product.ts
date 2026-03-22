@@ -28,13 +28,20 @@ const productSlice = createSlice({
 		builder
 			.addCase(fetchAllProducts.pending, (state) => {
 				state.showLoading = true;
+				// state = JSON.parse(
+				// 	localStorage.getItem("product") || "",
+				// );
 			})
 			.addCase(fetchAllProducts.fulfilled, (state, action) => {
 				state.products = action.payload;
 				state.showLoading = false;
+				// localStorage.setItem("product", JSON.stringify(state));
 			})
 			.addCase(fetchAllProducts.rejected, (state) => {
 				state.showLoading = false;
+				// state = JSON.parse(
+				// 	localStorage.getItem("product") || "",
+				// );
 			})
 			.addCase(createProduct.pending, (_state) => {})
 			.addCase(createProduct.fulfilled, (state, action) => {

@@ -22,13 +22,23 @@ const inventorySlice = createSlice({
 		builder
 			.addCase(fetchAllItems.pending, (state) => {
 				state.showLoading = true;
+				// state = JSON.parse(
+				// 	localStorage.getItem("inventory") || "",
+				// );
 			})
 			.addCase(fetchAllItems.fulfilled, (state, action) => {
 				state.items = action.payload;
 				state.showLoading = false;
+				// localStorage.setItem(
+				// 	"inventory",
+				// 	JSON.stringify(state),
+				// );
 			})
 			.addCase(fetchAllItems.rejected, (state) => {
 				state.showLoading = false;
+				// state = JSON.parse(
+				// 	localStorage.getItem("inventory") || "",
+				// );
 			});
 	},
 });

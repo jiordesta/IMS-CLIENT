@@ -30,13 +30,23 @@ const transactionSlice = createSlice({
 		builder
 			.addCase(fetchAllTransactions.pending, (state) => {
 				state.showLoading = true;
+				// state = JSON.parse(
+				// 	localStorage.getItem("transaction") || "",
+				// );
 			})
 			.addCase(fetchAllTransactions.fulfilled, (state, action) => {
 				state.transactions = action.payload;
 				state.showLoading = false;
+				// localStorage.setItem(
+				// 	"transaction",
+				// 	JSON.stringify(state),
+				// );
 			})
 			.addCase(fetchAllTransactions.rejected, (state) => {
 				state.showLoading = false;
+				// state = JSON.parse(
+				// 	localStorage.getItem("transaction") || "",
+				// );
 			});
 	},
 });

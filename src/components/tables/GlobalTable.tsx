@@ -93,7 +93,7 @@ export default function GlobalTable({
 	const Item = ({ item }: any) => {
 		return (
 			<div
-				className={`${selected?.id === item.id ? "bg-c2/50" : "bg-c2/25"}  rounded-lg p-2 ${!disableSelect && "cursor-pointer"} z-40`}
+				className={`${selected?.id === item.id ? "bg-c2/50" : "bg-c2/25"}  rounded-lg p-2 px-4 ${!disableSelect && "cursor-pointer"} z-40`}
 				onClick={() => handleSelect(item)}
 			>
 				<ul className="flex">
@@ -217,12 +217,19 @@ export default function GlobalTable({
 					</button>
 				)}
 				{filters && (
-					<div className="w-76 p-2">
+					<div className="w-76 p-2 flex gap-2 justify-center items-center">
 						<DatePicker
 							value={filters}
 							setter={setFilters}
 							dkey="date"
 						/>
+						<button className="">
+							<img
+								src="/icons/clear.svg"
+								width={30}
+								alt=""
+							/>
+						</button>
 					</div>
 				)}
 			</div>
@@ -231,7 +238,7 @@ export default function GlobalTable({
 
 	const Header = () => {
 		return (
-			<ul className="flex font-bold uppercase text-start">
+			<ul className="flex font-bold uppercase text-start px-2">
 				{headers.map((header: any) => (
 					<li
 						key={header.label}

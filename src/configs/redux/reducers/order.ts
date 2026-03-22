@@ -28,13 +28,16 @@ const orderSlice = createSlice({
 		builder
 			.addCase(fetchOrdersByDate.pending, (state) => {
 				state.showLoading = true;
+				// state = JSON.parse(localStorage.getItem("order") || "");
 			})
 			.addCase(fetchOrdersByDate.fulfilled, (state, action) => {
 				state.orders = action.payload;
 				state.showLoading = false;
+				// localStorage.setItem("order", JSON.stringify(state));
 			})
 			.addCase(fetchOrdersByDate.rejected, (state) => {
 				state.showLoading = false;
+				// state = JSON.parse(localStorage.getItem("order") || "");
 			});
 	},
 });

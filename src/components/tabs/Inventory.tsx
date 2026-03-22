@@ -9,15 +9,15 @@ export default function Inventory() {
 
 	const headers = [
 		{
-			label: "common name",
+			label: "Item",
 			dkey: "productDetails.commonName",
 			width: "200px",
 		},
-		{
-			label: "original name",
-			dkey: "productDetails.originalName",
-			width: "350px",
-		},
+		// {
+		// 	label: "original name",
+		// 	dkey: "productDetails.originalName",
+		// 	width: "350px",
+		// },
 		{
 			label: "Stocks",
 			dkey: "stocks",

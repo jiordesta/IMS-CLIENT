@@ -54,7 +54,7 @@ export default function DatePicker({ value, setter, dkey }: DatePickerProps) {
 	};
 
 	return (
-		<div ref={ref} className="relative text-c4">
+		<div ref={ref} className="relative text-c4 w-full">
 			{/* Input */}
 			<input
 				readOnly

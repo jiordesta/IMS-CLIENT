@@ -92,7 +92,7 @@ export default function GlobalLayout({
 	return (
 		<ModalContext.Provider value={{ openModal, closeModal }}>
 			<main
-				className={`h-screen ${isMobile ? "p-2" : "p-2 md:p-4 lg:p-8 w-full"}`}
+				className={`h-screen ${isMobile ? "p-2 text-[12px]" : "p-2 md:p-4 lg:p-8 w-full text-[14px]"}`}
 			>
 				<div className="w-full h-full">{children}</div>
 				{showModal && (

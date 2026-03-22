@@ -78,7 +78,7 @@ export default function Navigation() {
 
 		return (
 			<button
-				className={`cursor-pointer flex items-center p-2 rounded-lg bg-c3/50 hover:bg-c3/85 transition-all ease-in-out duration-600 ${(isHovered || isActive) && !isMobile ? "gap-2 glowBox bg-c3/85" : (isHovered || isActive) && isMobile ? "gap-0 bg-c3/85" : "gap-0"}`}
+				className={`cursor-pointer flex items-center p-2 transition-all ease-in-out duration-600 bg-c3/25 hover:bg-c3/75 ${(isHovered || isActive) && !isMobile ? "gap-2 glowBox bg-c3/85" : (isHovered || isActive) && isMobile ? "gap-0 bg-c3/85" : "gap-0"} rounded-lg`}
 				onMouseEnter={() => {
 					setIsHovered(true);
 				}}
@@ -136,7 +136,7 @@ export default function Navigation() {
 
 	return (
 		<div
-			className={`flex flex-col gap-2 max-w-full overflow-hidden justify-between  ${isMobile ? "p-1" : "p-2 md:p-4 rounded-2xl"} h-full`}
+			className={`flex flex-col gap-2 max-w-full overflow-hidden justify-between  ${isMobile ? "p-1 md:p-2" : "p-2 md:p-4 rounded-2xl"} h-full`}
 		>
 			<div className="flex flex-col gap-2 items-end">
 				{navButtons.map((button: NavButtonType) => {

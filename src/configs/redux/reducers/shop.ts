@@ -23,13 +23,16 @@ const shopSlice = createSlice({
 		builder
 			.addCase(fetchAllShops.pending, (state) => {
 				state.showLoading = true;
+				// state = JSON.parse(localStorage.getItem("shop") || "");
 			})
 			.addCase(fetchAllShops.fulfilled, (state, action) => {
 				state.shops = action.payload;
 				state.showLoading = false;
+				// localStorage.setItem("shop", JSON.stringify(state));
 			})
 			.addCase(fetchAllShops.rejected, (state) => {
 				state.showLoading = false;
+				// state = JSON.parse(localStorage.getItem("shop") || "");
 			})
 			.addCase(createShop.pending, (state) => {
 				state.showLoading = true;

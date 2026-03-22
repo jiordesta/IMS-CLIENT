@@ -26,13 +26,16 @@ const userSlice = createSlice({
 		builder
 			.addCase(fetchallUsers.pending, (state) => {
 				state.showLoading = true;
+				//state = JSON.parse(localStorage.getItem("user") || "");
 			})
 			.addCase(fetchallUsers.fulfilled, (state, action) => {
 				state.users = action.payload;
 				state.showLoading = false;
+				// localStorage.setItem("user", JSON.stringify(state));
 			})
 			.addCase(fetchallUsers.rejected, (state) => {
 				state.showLoading = false;
+				// state = JSON.parse(localStorage.getItem("user") || "");
 			})
 			.addCase(assignRole.fulfilled, (state, action) => {
 				state.users = state.users.map(

@@ -22,7 +22,7 @@ export default function Products() {
 		{
 			label: "original name",
 			dkey: "productDetails.originalName",
-			width: "350px",
+			width: "250px",
 		},
 		{
 			label: "price",
