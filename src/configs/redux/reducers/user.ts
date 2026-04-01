@@ -1,0 +1,53 @@
+import { createSlice } from "@reduxjs/toolkit";
+import { ApiType, newAsyncThunk } from "../../newAsyncThunk";
+import type { UserProfileData } from "../../../libs/types";
+import { getFromStorage } from "../../../libs/storage";
+
+export const fetchallUsers = newAsyncThunk("/user/fetchall", ApiType.GET);
+
+export const deleteUser = newAsyncThunk("/user/delete", ApiType.DEL);
+
+export const assignRole = newAsyncThunk("/user/assign/role", ApiType.PATCH);
+
+type UserState = {
+	users: UserProfileData[];
+	showLoading: boolean;
+};
+
+const initialState: UserState = getFromStorage("user") || {
+	users: [],
+	showLoading: false,
+};
+
+const userSlice = createSlice({
+	name: "user",
+	initialState,
+	reducers: {},
+	extraReducers: (builder) => {
+		builder
+			.addCase(fetchallUsers.pending, (state) => {
+				state.showLoading = true;
+			})
+			.addCase(fetchallUsers.fulfilled, (state, action) => {
+				state.users = action.payload;
+				state.showLoading = false;
+			})
+			.addCase(fetchallUsers.rejected, (state) => {
+				state.showLoading = false;
+			})
+			.addCase(assignRole.fulfilled, (state, action) => {
+				state.users = state.users.map(
+					(user: UserProfileData) => {
+						if (user.id === action.payload.id) {
+							return action.payload;
+						}
+						return user;
+					},
+				);
+			});
+	},
+});
+
+export const {} = userSlice.actions;
+
+export default userSlice.reducer;
