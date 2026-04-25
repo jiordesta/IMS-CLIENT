@@ -2,142 +2,187 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../configs/redux/store";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import {
-	deleteProduct,
-	fetchAllProducts,
+  createProduct,
+  deleteProduct,
+  fetchAllProducts,
+  updateProduct,
 } from "../../configs/redux/reducers/product";
 import { ModalAction, ModalType, useModal } from "../hooks/UseModal";
 import toast from "react-hot-toast";
 import GlobalTable from "../GlobalTable";
 import { HEADERTYPES } from "../../libs/enums";
-// import { addToQueue } from "../../configs/redux/reducers/queue";
 
 type ProductTabProps = {
-	setShowLoading: Dispatch<SetStateAction<boolean>>;
+  setShowLoading: Dispatch<SetStateAction<boolean>>;
 };
 
 export default function Products({ setShowLoading }: ProductTabProps) {
-	const [refresh, setRefresh] = useState(false);
-	const [selected, setSelected] = useState<number[]>([]);
-	const [isSelectedAll, setIsSelectedAll] = useState(false);
-	const dispatch = useDispatch<AppDispatch>();
-	const { openModal } = useModal();
-	const { accessToken } = useSelector((state: RootState) => state.auth);
-	const { products } = useSelector((state: RootState) => state.product);
+  const [refresh, setRefresh] = useState(false);
+  const [selected, setSelected] = useState<number[]>([]);
+  const [isSelectedAll, setIsSelectedAll] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const { openModal } = useModal();
+  const { accessToken } = useSelector((state: RootState) => state.auth);
+  const { products } = useSelector((state: RootState) => state.product);
 
-	const handleSelect = (productId: number) => {
-		if (selected.includes(productId)) {
-			setSelected(selected.filter((i) => i !== productId));
-		} else {
-			setSelected([...selected, productId]);
-		}
-	};
+  const handleSelect = (productId: number) => {
+    if (selected.includes(productId)) {
+      setSelected(selected.filter((i) => i !== productId));
+    } else {
+      setSelected([...selected, productId]);
+    }
+  };
 
-	const headers = [
-		{
-			label: "",
-			dkey: "",
-			type: HEADERTYPES.CHECKBOX,
-			itemRenderer: (productId: number) => (
-				<input
-					type="checkbox"
-					className="rounded-full cursor-pointer"
-					checked={selected.includes(productId)}
-					onChange={() => handleSelect(productId)}
-				/>
-			),
-			headerRenderer: () => (
-				<input
-					type="checkbox"
-					className="rounded-full cursor-pointer"
-					checked={isSelectedAll}
-					onChange={() => setIsSelectedAll(!isSelectedAll)}
-				/>
-			),
-			col: 1,
-		},
-		{
-			label: "common name",
-			dkey: "productDetails.commonName",
-			col: 4,
-		},
-		{
-			label: "original name",
-			dkey: "productDetails.originalName",
-			col: 4,
-		},
-	];
+  const headers = [
+    {
+      label: "",
+      dkey: "",
+      type: HEADERTYPES.CHECKBOX,
+      itemRenderer: (productId: number) => (
+        <input
+          type="checkbox"
+          className="rounded-full cursor-pointer"
+          checked={selected.includes(productId)}
+          onChange={() => handleSelect(productId)}
+        />
+      ),
+      headerRenderer: () => (
+        <input
+          type="checkbox"
+          className="rounded-full cursor-pointer"
+          checked={isSelectedAll}
+          onChange={() => setIsSelectedAll(!isSelectedAll)}
+        />
+      ),
+      col: 1,
+    },
+    {
+      label: "product",
+      dkey: "name",
+      col: 2,
+    },
+    {
+      label: "other names",
+      dkey: "otherNames",
+      col: 12,
+    },
+  ];
 
-	useEffect(() => {
-		if (!accessToken) return;
-		setShowLoading(true);
-		dispatch(fetchAllProducts({ token: accessToken })).then(() => {
-			setShowLoading(false);
-		});
-	}, [accessToken, refresh]);
+  useEffect(() => {
+    if (!accessToken) return;
+    setShowLoading(true);
+    dispatch(fetchAllProducts({ token: accessToken })).then(() => {
+      setShowLoading(false);
+    });
+  }, [accessToken, refresh]);
 
-	useEffect(() => {
-		if (isSelectedAll) {
-			setSelected(products.map((item) => item.id));
-		} else {
-			setSelected([]);
-		}
-	}, [isSelectedAll, refresh]);
+  useEffect(() => {
+    if (isSelectedAll) {
+      setSelected(products.map((item) => item.id));
+    } else {
+      setSelected([]);
+    }
+  }, [isSelectedAll, refresh]);
 
-	const handleCreateNewProduct = () => {
-		openModal(ModalType.PRODUCT, ModalAction.CREATE);
-	};
+  const handleCreateProduct = () => {
+    if (!accessToken) return;
 
-	const handleDeleteProduct = () => {
-		if (!accessToken) return;
+    const callBack = async (payload: any) => {
+      if (!accessToken) return;
+      dispatch(
+        createProduct({
+          token: accessToken,
+          payload: payload,
+        }),
+      ).then((res: any) => {
+        if (res.error) {
+          toast.error(res.error.message);
+        } else {
+          toast.success("Done Successfully");
+        }
+      });
+    };
 
-		const productIds = selected.join(",");
+    openModal(ModalType.PRODUCT, ModalAction.CREATE, {
+      callBack: callBack,
+      title: "CREATE PRODUCT",
+    });
+  };
 
-		const callBack = async () => {
-			dispatch(
-				deleteProduct({
-					token: accessToken,
-					payload: { productIds },
-				}),
-			).then((res: any) => {
-				if (res.error) {
-					toast.error(res.error.message);
-				} else {
-					toast.success("Deleted Successfully");
-				}
-			});
-		};
+  const handleDeleteProduct = () => {
+    if (!accessToken) return;
 
-		openModal(ModalType.CONFIRMATION, ModalAction.DELETE, {
-			callBack: callBack,
-		});
-	};
+    const productIds = selected.join(",");
 
-	const handleUpdateProduct = () => {
-		if (selected.length != 1) {
-			toast.error("Please select only one product");
-		} else {
-			openModal(
-				ModalType.PRODUCT,
-				ModalAction.UPDATE,
-				products.find((item) => item.id === selected[0]),
-			);
-		}
-	};
+    const callBack = async () => {
+      dispatch(
+        deleteProduct({
+          token: accessToken,
+          payload: { productIds },
+        }),
+      ).then((res: any) => {
+        if (res.error) {
+          toast.error(res.error.message);
+        } else {
+          toast.success("Deleted Successfully");
+        }
+      });
+    };
 
-	const handleTableRefresh = () => {
-		setRefresh(!refresh);
-	};
+    openModal(ModalType.CONFIRMATION, ModalAction.DELETE, {
+      title: `DELETE PRODUCT${selected.length > 1 ? "S" : ""}?`,
+      callBack: callBack,
+    });
+  };
 
-	return (
-		<div className="h-full w-full">
-			<GlobalTable
-				data={products}
-				headers={headers}
-				refresh={handleTableRefresh}
-				add={handleCreateNewProduct}
-				del={handleDeleteProduct}
-				edit={handleUpdateProduct}
-			/>
-		</div>
-	);
+  const handleUpdateProduct = () => {
+    if (!accessToken) return;
+
+    const callBack = async (payload?: any, id?: number) => {
+      if (!accessToken) return;
+
+      dispatch(
+        updateProduct({
+          payload: payload,
+          token: accessToken,
+          id: id,
+        }),
+      ).then((res: any) => {
+        if (res.error) {
+          toast.error(res.error.message);
+        } else {
+          toast.success("Done Successfully");
+        }
+      });
+    };
+
+    if (selected.length != 1) {
+      toast.error("Please select only one product");
+    } else {
+      const product = products.find((product) => product.id === selected[0]);
+      openModal(ModalType.PRODUCT, ModalAction.UPDATE, {
+        callBack: callBack,
+        title: "UPDATE PRODUCT",
+        ...product,
+      });
+    }
+  };
+
+  const handleTableRefresh = () => {
+    if (!accessToken) return;
+    setRefresh(!refresh);
+  };
+
+  return (
+    <div className="h-full w-full">
+      <GlobalTable
+        data={products}
+        headers={headers}
+        refresh={handleTableRefresh}
+        add={handleCreateProduct}
+        del={handleDeleteProduct}
+        edit={handleUpdateProduct}
+      />
+    </div>
+  );
 }

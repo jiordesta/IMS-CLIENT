@@ -106,13 +106,13 @@ export default function GlobalLayout({
 					${
             device === Device.MOBILE
               ? "p-2 text-[12px]"
-              : "p-2 md:p-4 lg:p-8 w-full text-[14px]"
+              : "p-2 md:p-4 lg:p-4 w-full text-[14px]"
           }
 					`}
       >
         <div className="w-full h-full flex gap-2">
           {showNavigation && (
-            <div className={device === Device.MOBILE ? "min-w-10" : "min-w-40"}>
+            <div className={device === Device.MOBILE ? "min-w-13" : "min-w-40"}>
               <GlobalNavigation />
             </div>
           )}

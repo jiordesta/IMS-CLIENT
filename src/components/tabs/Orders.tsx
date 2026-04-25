@@ -1,8 +1,8 @@
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { ModalAction, ModalType, useModal } from "../hooks/UseModal";
 import {
-	fetchOrdersByDate,
-	setOrdersAsDone,
+  fetchOrdersByDate,
+  setOrdersAsDone,
 } from "../../configs/redux/reducers/order";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../configs/redux/store";
@@ -13,232 +13,217 @@ import { fetchAllShops } from "../../configs/redux/reducers/shop";
 import toast from "react-hot-toast";
 
 type OrderTabProps = {
-	setShowLoading: Dispatch<SetStateAction<boolean>>;
+  setShowLoading: Dispatch<SetStateAction<boolean>>;
 };
 
 export default function Orders({ setShowLoading }: OrderTabProps) {
-	const [refresh, setRefresh] = useState(false);
-	const [selected, setSelected] = useState<number[]>([]);
-	const [isSelectedAll, setIsSelectedAll] = useState(false);
-	const dispatch = useDispatch<AppDispatch>();
-	const { accessToken } = useSelector((state: RootState) => state.auth);
-	const { orders } = useSelector((state: RootState) => state.order);
-	const { openModal } = useModal();
+  const [refresh, setRefresh] = useState(false);
+  const [selected, setSelected] = useState<number[]>([]);
+  const [isSelectedAll, setIsSelectedAll] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const { accessToken } = useSelector((state: RootState) => state.auth);
+  const { orders } = useSelector((state: RootState) => state.order);
+  const { openModal } = useModal();
 
-	const handleCreateOrder = () => {
-		openModal(ModalType.ORDER, ModalAction.CREATE);
-	};
+  const [filters, setFilters] = useState({
+    status: OrderStatus.PENDING,
+  });
 
-	const handleTableRefresh = () => {
-		setRefresh(!refresh);
-	};
+  const { shops } = useSelector((state: RootState) => state.shop);
 
-	const [filters, setFilters] = useState({
-		status: OrderStatus.PENDING,
-	});
+  const handleSelect = (productId: number) => {
+    if (selected.includes(productId)) {
+      setSelected(selected.filter((i) => i !== productId));
+    } else {
+      setSelected([...selected, productId]);
+    }
+  };
 
-	const { shops } = useSelector((state: RootState) => state.shop);
+  useEffect(() => {
+    if (isSelectedAll) {
+      setSelected(orders.map((item) => item.id));
+    } else {
+      setSelected([]);
+    }
+  }, [isSelectedAll, refresh]);
 
-	const handleSelect = (productId: number) => {
-		if (selected.includes(productId)) {
-			setSelected(selected.filter((i) => i !== productId));
-		} else {
-			setSelected([...selected, productId]);
-		}
-	};
+  const handleShowList = (orderId: number) => {
+    const displayHeaders = [
+      {
+        label: "Name",
+        dkey: "product.productDetails.commonName",
+        col: 18,
+      },
+      {
+        label: "QTY",
+        dkey: "quantity",
+        col: 6,
+      },
+    ];
 
-	useEffect(() => {
-		if (isSelectedAll) {
-			setSelected(orders.map((item) => item.id));
-		} else {
-			setSelected([]);
-		}
-	}, [isSelectedAll, refresh]);
+    const targetOrder = orders.find((item) => item.id === orderId);
 
-	const handleShowList = (orderId: number) => {
-		const displayHeaders = [
-			{
-				label: "Name",
-				dkey: "product.productDetails.commonName",
-				col: 18,
-			},
-			{
-				label: "QTY",
-				dkey: "quantity",
-				col: 6,
-			},
-		];
+    openModal(ModalType.DISPLAY, ModalAction.DISPLAY, {
+      items: targetOrder?.orderItems,
+      displayHeaders: displayHeaders,
+      title: "Order Details",
+    });
+  };
 
-		const targetOrder = orders.find((item) => item.id === orderId);
+  const headers = [
+    {
+      label: "select",
+      dkey: "select",
+      type: HEADERTYPES.CHECKBOX,
+      itemRenderer: (deliveryId: number) => (
+        <input
+          type="checkbox"
+          className="rounded-full cursor-pointer"
+          checked={selected.includes(deliveryId)}
+          onChange={() => handleSelect(deliveryId)}
+        />
+      ),
+      headerRenderer: () => (
+        <input
+          type="checkbox"
+          className="rounded-full cursor-pointer"
+          checked={isSelectedAll}
+          onChange={() => setIsSelectedAll(!isSelectedAll)}
+        />
+      ),
+      col: 1,
+    },
+    {
+      label: "Type",
+      dkey: "type",
+      col: 3,
+      typeValueRenderer: (value: number) => {
+        return (
+          <GlobalValueRenderer value={value} type={HEADERTYPES.ORDERTYPE} />
+        );
+      },
+    },
+    {
+      label: "Status",
+      dkey: "status",
+      col: 3,
+      typeValueRenderer: (value: number) => {
+        return (
+          <GlobalValueRenderer value={value} type={HEADERTYPES.ORDERSTATUS} />
+        );
+      },
+    },
+    {
+      label: "Shop",
+      dkey: "shopDetails.name",
+      col: 4,
+    },
+    {
+      label: "Order Placed",
+      dkey: "orderDetails.orderDate",
+      col: 4,
+      type: "date",
+    },
+    {
+      label: "Time",
+      dkey: "orderDetails.orderDate",
+      col: 4,
+      type: "time",
+    },
+    {
+      label: "Total Items",
+      dkey: "totalItems",
+      col: 3,
+      endLabel: " boxes",
+    },
+    {
+      label: "",
+      dkey: "viewOrderItems",
+      col: 2,
+      type: HEADERTYPES.SHOW,
+      displayItemsRenderer: (orderId: number) => (
+        <button
+          className="cursor-pointer"
+          onClick={() => handleShowList(orderId)}
+        >
+          <img src="/icons/showlist.svg" width={18} alt="" />
+        </button>
+      ),
+    },
+  ];
 
-		openModal(ModalType.DISPLAY, ModalAction.DISPLAY, {
-			items: targetOrder?.orderItems,
-			displayHeaders: displayHeaders,
-			title: "Order Details",
-		});
-	};
+  useEffect(() => {
+    if (!accessToken) return;
+    setShowLoading(true);
+    dispatch(fetchAllShops({ token: accessToken }));
+    dispatch(
+      fetchOrdersByDate({
+        payload: filters,
+        token: accessToken,
+      }),
+    ).then(() => setShowLoading(false));
+  }, [accessToken, refresh, filters]);
 
-	const headers = [
-		{
-			label: "select",
-			dkey: "select",
-			type: HEADERTYPES.CHECKBOX,
-			itemRenderer: (deliveryId: number) => (
-				<input
-					type="checkbox"
-					className="rounded-full cursor-pointer"
-					checked={selected.includes(deliveryId)}
-					onChange={() => handleSelect(deliveryId)}
-				/>
-			),
-			headerRenderer: () => (
-				<input
-					type="checkbox"
-					className="rounded-full cursor-pointer"
-					checked={isSelectedAll}
-					onChange={() => setIsSelectedAll(!isSelectedAll)}
-				/>
-			),
-			col: 1,
-		},
-		{
-			label: "Type",
-			dkey: "type",
-			col: 3,
-			typeValueRenderer: (value: number) => {
-				return (
-					<GlobalValueRenderer
-						value={value}
-						type={HEADERTYPES.ORDERTYPE}
-					/>
-				);
-			},
-		},
-		{
-			label: "Status",
-			dkey: "status",
-			col: 3,
-			typeValueRenderer: (value: number) => {
-				return (
-					<GlobalValueRenderer
-						value={value}
-						type={HEADERTYPES.ORDERSTATUS}
-					/>
-				);
-			},
-		},
-		{
-			label: "Shop",
-			dkey: "shopDetails.name",
-			col: 4,
-		},
-		{
-			label: "Order Placed",
-			dkey: "orderDetails.orderDate",
-			col: 4,
-			type: "date",
-		},
-		{
-			label: "Time",
-			dkey: "orderDetails.orderDate",
-			col: 4,
-			type: "time",
-		},
-		{
-			label: "Total Items",
-			dkey: "totalItems",
-			col: 3,
-			endLabel: " boxes",
-		},
-		{
-			label: "",
-			dkey: "viewOrderItems",
-			col: 2,
-			type: HEADERTYPES.SHOW,
-			displayItemsRenderer: (orderId: number) => (
-				<button
-					className="cursor-pointer"
-					onClick={() => handleShowList(orderId)}
-				>
-					<img
-						src="/icons/showlist.svg"
-						width={18}
-						alt=""
-					/>
-				</button>
-			),
-		},
-	];
+  const handleUpdateOrder = () => {
+    if (selected.length !== 1) {
+      toast.error("Please select at least one order");
+      return;
+    }
 
-	useEffect(() => {
-		if (!accessToken) return;
-		setShowLoading(true);
-		dispatch(fetchAllShops({ token: accessToken }));
-		dispatch(
-			fetchOrdersByDate({
-				payload: filters,
-				token: accessToken,
-			}),
-		).then(() => setShowLoading(false));
-	}, [accessToken, refresh, filters]);
+    const order = orders.find((item) => item.id === selected[0]);
 
-	const handleUpdateOrder = () => {
-		if (selected.length !== 1) {
-			toast.error("Please select at least one order");
-			return;
-		}
+    openModal(ModalType.ORDER, ModalAction.UPDATE, order);
+  };
 
-		const order = orders.find((item) => item.id === selected[0]);
+  const handleOrdersAsDone = () => {
+    const orderIds = selected.join(",");
 
-		// if (order.orderDetails.status === OrderStatus.COMPLETED) {
-		// 	toast.error("Update is only allowed for pending orders");
-		// 	return;
-		// }
+    if (!orderIds) {
+      toast.error("Please select at least one order");
+      return;
+    }
 
-		openModal(ModalType.ORDER, ModalAction.UPDATE, order);
-	};
+    const callBack = async () => {
+      if (!accessToken) return;
+      dispatch(
+        setOrdersAsDone({
+          token: accessToken,
+          payload: { orderIds },
+        }),
+      ).then((res: any) => {
+        if (res.error) {
+          toast.error(res.error.message);
+        } else {
+          toast.success("Done Successfully");
+        }
+      });
+    };
 
-	const handleOrdersAsDone = () => {
-		const orderIds = selected.join(",");
+    openModal(ModalType.CONFIRMATION, ModalAction.CONFIRM, {
+      title: "SET AS DONE?",
+      callBack: callBack,
+    });
+  };
 
-		if (!orderIds) {
-			toast.error("Please select at least one order");
-			return;
-		}
+  const handleCreateOrder = () => {
+    openModal(ModalType.ORDER, ModalAction.CREATE);
+  };
 
-		const callBack = async () => {
-			if (!accessToken) return;
-			dispatch(
-				setOrdersAsDone({
-					token: accessToken,
-					payload: { orderIds },
-				}),
-			).then((res: any) => {
-				if (res.error) {
-					toast.error(res.error.message);
-				} else {
-					toast.success("Done Successfully");
-				}
-			});
-		};
+  const handleTableRefresh = () => {
+    setRefresh(!refresh);
+  };
 
-		openModal(ModalType.CONFIRMATION, ModalAction.CONFIRM, {
-			title: "SET AS DONE?",
-			callBack: callBack,
-		});
-	};
-
-	return (
-		<GlobalTable
-			data={orders}
-			headers={headers}
-			add={handleCreateOrder}
-			refresh={handleTableRefresh}
-			edit={handleUpdateOrder}
-			setFilters={setFilters}
-			filters={filters}
-			shops={shops}
-			done={handleOrdersAsDone}
-		/>
-	);
+  return (
+    <GlobalTable
+      data={orders}
+      headers={headers}
+      add={handleCreateOrder}
+      refresh={handleTableRefresh}
+      edit={handleUpdateOrder}
+      setFilters={setFilters}
+      filters={filters}
+      shops={shops}
+      done={handleOrdersAsDone}
+    />
+  );
 }
