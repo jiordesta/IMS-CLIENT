@@ -14,21 +14,21 @@ export default function GlobalNavigation() {
   };
 
   const navButtons: NavButtonType[] = [
-    // {
-    //   label: "Inventory",
-    //   path: "inventory",
-    //   icon: "/icons/inventory.svg",
-    // },
+    {
+      label: "Inventory",
+      path: "inventory",
+      icon: "/icons/inventory.svg",
+    },
     {
       label: "Products",
       path: "products",
       icon: "/icons/meat.svg",
     },
-    // {
-    //   label: "Deliveries",
-    //   path: "deliveries",
-    //   icon: "/icons/delivery.svg",
-    // },
+    {
+      label: "Deliveries",
+      path: "deliveries",
+      icon: "/icons/delivery.svg",
+    },
     {
       label: "Shops",
       path: "shops",
@@ -44,11 +44,11 @@ export default function GlobalNavigation() {
       path: "orders",
       icon: "/icons/order.svg",
     },
-    {
-      label: "Transaction",
-      path: "transactions",
-      icon: "/icons/transaction.svg",
-    },
+    // {
+    //   label: "Transaction",
+    //   path: "transactions",
+    //   icon: "/icons/transaction.svg",
+    // },
     // {
     //   label: "Reports",
     //   path: "reports",

@@ -22,14 +22,14 @@ export default function ProductModal({ action, payload }: ProductModalProps) {
     if (!payload) return;
     if (ModalAction.UPDATE === action) {
       setForm({
-        names: payload.names,
+        names: payload.product.names,
       });
     }
   }, [action, payload]);
 
   const handleCallBackCall = async () => {
     setLoading(true);
-    await payload?.callBack(form, payload?.id).then(() => {
+    await payload?.callBack(form, payload?.product?.id).then(() => {
       closeModal();
       setLoading(false);
     });

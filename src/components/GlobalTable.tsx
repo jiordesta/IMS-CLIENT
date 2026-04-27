@@ -117,7 +117,7 @@ export default function GlobalTable({
             <DatePicker value={filters} setter={setFilters} dkey="date" />
           </div>
         )}
-        {filters && (
+        {/* {filters && (
           <div className="w-69 flex gap-2 justify-center items-center">
             <SelectInput
               options={shops || []}
@@ -142,7 +142,7 @@ export default function GlobalTable({
               labelKey="key"
             />
           </div>
-        )}
+        )} */}
         {filters && (
           <button className="cursor-pointer" onClick={handleClearFilters}>
             <img src="/icons/clear.svg" width={30} alt="" />

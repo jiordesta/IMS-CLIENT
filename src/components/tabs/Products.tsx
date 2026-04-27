@@ -58,8 +58,8 @@ export default function Products({ setShowLoading }: ProductTabProps) {
     },
     {
       label: "product",
-      dkey: "name",
-      col: 2,
+      dkey: "productName",
+      col: 6,
     },
     {
       label: "other names",
@@ -100,6 +100,8 @@ export default function Products({ setShowLoading }: ProductTabProps) {
         } else {
           toast.success("Done Successfully");
         }
+
+        setRefresh(!refresh);
       });
     };
 
@@ -126,6 +128,8 @@ export default function Products({ setShowLoading }: ProductTabProps) {
         } else {
           toast.success("Deleted Successfully");
         }
+
+        setRefresh(!refresh);
       });
     };
 
@@ -153,6 +157,8 @@ export default function Products({ setShowLoading }: ProductTabProps) {
         } else {
           toast.success("Done Successfully");
         }
+
+        setRefresh(!refresh);
       });
     };
 
@@ -160,10 +166,11 @@ export default function Products({ setShowLoading }: ProductTabProps) {
       toast.error("Please select only one product");
     } else {
       const product = products.find((product) => product.id === selected[0]);
+
       openModal(ModalType.PRODUCT, ModalAction.UPDATE, {
         callBack: callBack,
         title: "UPDATE PRODUCT",
-        ...product,
+        product: product,
       });
     }
   };

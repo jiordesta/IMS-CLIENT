@@ -1,14 +1,14 @@
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { ModalAction, ModalType, useModal } from "../hooks/UseModal";
 import {
+  createOrder,
+  deleteOrder,
   fetchOrdersByDate,
-  setOrdersAsDone,
 } from "../../configs/redux/reducers/order";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../configs/redux/store";
 import GlobalTable from "../GlobalTable";
 import { HEADERTYPES, OrderStatus } from "../../libs/enums";
-import GlobalValueRenderer from "../GlobalValueRenderer";
 import { fetchAllShops } from "../../configs/redux/reducers/shop";
 import toast from "react-hot-toast";
 
@@ -51,13 +51,18 @@ export default function Orders({ setShowLoading }: OrderTabProps) {
     const displayHeaders = [
       {
         label: "Name",
-        dkey: "product.productDetails.commonName",
-        col: 18,
+        dkey: "productName",
+        col: 12,
+      },
+      {
+        label: "Brand",
+        dkey: "brand",
+        col: 8,
       },
       {
         label: "QTY",
         dkey: "quantity",
-        col: 6,
+        col: 4,
       },
     ];
 
@@ -94,47 +99,21 @@ export default function Orders({ setShowLoading }: OrderTabProps) {
       col: 1,
     },
     {
-      label: "Type",
-      dkey: "type",
-      col: 3,
-      typeValueRenderer: (value: number) => {
-        return (
-          <GlobalValueRenderer value={value} type={HEADERTYPES.ORDERTYPE} />
-        );
-      },
-    },
-    {
-      label: "Status",
-      dkey: "status",
-      col: 3,
-      typeValueRenderer: (value: number) => {
-        return (
-          <GlobalValueRenderer value={value} type={HEADERTYPES.ORDERSTATUS} />
-        );
-      },
-    },
-    {
-      label: "Shop",
-      dkey: "shopDetails.name",
+      label: "User",
+      dkey: "user",
       col: 4,
     },
     {
-      label: "Order Placed",
-      dkey: "orderDetails.orderDate",
+      label: "Date",
+      dkey: "orderDate",
       col: 4,
       type: "date",
     },
     {
       label: "Time",
-      dkey: "orderDetails.orderDate",
+      dkey: "orderDate",
       col: 4,
       type: "time",
-    },
-    {
-      label: "Total Items",
-      dkey: "totalItems",
-      col: 3,
-      endLabel: " boxes",
     },
     {
       label: "",
@@ -164,18 +143,7 @@ export default function Orders({ setShowLoading }: OrderTabProps) {
     ).then(() => setShowLoading(false));
   }, [accessToken, refresh, filters]);
 
-  const handleUpdateOrder = () => {
-    if (selected.length !== 1) {
-      toast.error("Please select at least one order");
-      return;
-    }
-
-    const order = orders.find((item) => item.id === selected[0]);
-
-    openModal(ModalType.ORDER, ModalAction.UPDATE, order);
-  };
-
-  const handleOrdersAsDone = () => {
+  const handleDeleteOrder = () => {
     const orderIds = selected.join(",");
 
     if (!orderIds) {
@@ -185,8 +153,11 @@ export default function Orders({ setShowLoading }: OrderTabProps) {
 
     const callBack = async () => {
       if (!accessToken) return;
+
+      setShowLoading(true);
+
       dispatch(
-        setOrdersAsDone({
+        deleteOrder({
           token: accessToken,
           payload: { orderIds },
         }),
@@ -194,19 +165,43 @@ export default function Orders({ setShowLoading }: OrderTabProps) {
         if (res.error) {
           toast.error(res.error.message);
         } else {
-          toast.success("Done Successfully");
+          toast.success("Deleted Successfully");
         }
+        setShowLoading(false);
+        setRefresh(!refresh);
       });
     };
 
     openModal(ModalType.CONFIRMATION, ModalAction.CONFIRM, {
-      title: "SET AS DONE?",
+      title: `DELETE ORDER${selected.length > 1 ? "S" : ""}?`,
       callBack: callBack,
     });
   };
 
   const handleCreateOrder = () => {
-    openModal(ModalType.ORDER, ModalAction.CREATE);
+    const callBack = async (payload: any) => {
+      if (!accessToken) return;
+      setShowLoading(true);
+      dispatch(
+        createOrder({
+          token: accessToken,
+          payload: payload,
+        }),
+      ).then((res: any) => {
+        if (res.error) {
+          toast.error(res.error.message);
+        } else {
+          toast.success("Order Placed Successfully");
+        }
+        setShowLoading(false);
+        setRefresh(!refresh);
+      });
+    };
+
+    openModal(ModalType.ORDER, ModalAction.DELETE, {
+      callBack: callBack,
+      title: "DELETE ORDER?",
+    });
   };
 
   const handleTableRefresh = () => {
@@ -219,11 +214,10 @@ export default function Orders({ setShowLoading }: OrderTabProps) {
       headers={headers}
       add={handleCreateOrder}
       refresh={handleTableRefresh}
-      edit={handleUpdateOrder}
+      del={handleDeleteOrder}
       setFilters={setFilters}
       filters={filters}
       shops={shops}
-      done={handleOrdersAsDone}
     />
   );
 }
