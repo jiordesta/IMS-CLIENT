@@ -37,8 +37,8 @@ const deliverySlice = createSlice({
       .addCase(fetchAllDeliveries.rejected, (state) => {
         state.showLoading = false;
       })
-      .addCase(createDelivery.fulfilled, (state, action) => {})
-      .addCase(updateDelivery.fulfilled, (state, action) => {});
+      .addCase(createDelivery.fulfilled, () => {})
+      .addCase(updateDelivery.fulfilled, () => {});
   },
 });
 
