@@ -73,7 +73,7 @@ export default function Inventory({ setShowLoading }: InventoryTabProps) {
       endLabel: " Boxes",
     },
     {
-      label: "Total Out",
+      label: "Lumabas",
       dkey: "totalOut",
       col: 4,
       endLabel: " Boxes",
