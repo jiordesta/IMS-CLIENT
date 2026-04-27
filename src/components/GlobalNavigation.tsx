@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import type { AppDispatch, RootState } from "../configs/redux/store";
 import { removeTokens, removeUserInfo } from "../configs/redux/reducers/auth";
 import { ModalAction, ModalType, useModal } from "./hooks/UseModal";
-import { Device } from "../configs/redux/reducers/config";
+import { Device, setTheme, Theme } from "../configs/redux/reducers/config";
 
 export default function GlobalNavigation() {
   type NavButtonType = {
@@ -143,80 +143,80 @@ export default function GlobalNavigation() {
     );
   };
 
-  // const ThemeTogglerButton = () => {
-  // 	const [isHovered, setIsHovered] = useState(false);
-  // 	const dispatch = useDispatch<AppDispatch>();
+  const ThemeTogglerButton = () => {
+    const [isHovered, setIsHovered] = useState(false);
+    const dispatch = useDispatch<AppDispatch>();
+    const { theme } = useSelector((state: RootState) => state.config);
+    return (
+      <button
+        className={`cursor-pointer flex items-center p-2 rounded-lg bg-c3/50 hover:bg-c3/85 transition-all ease-in-out duration-600 ${isHovered && !isMobile ? "gap-2 bg-c3/85" : isHovered && isMobile ? "gap-0 bg-c3/85" : "gap-0"}`}
+        onMouseEnter={() => {
+          setIsHovered(true);
+        }}
+        onMouseLeave={() => {
+          setIsHovered(false);
+        }}
+        onClick={() => dispatch(setTheme())}
+      >
+        <span
+          className={`${isHovered && !isMobile ? "" : "w-0 text-transparent"} font-bold over whitespace-nowrap overflow-hidden `}
+        >
+          {`${theme === Theme.DARK ? "Light Mode" : "DARK MODE"}`}
+        </span>
+        <img
+          src={`/icons/${theme === Theme.DARK ? "light" : "dark"}.svg`}
+          alt=""
+          width={25}
+        />
+      </button>
+    );
+  };
 
-  // 	return (
-  // 		<button
-  // 			className={`cursor-pointer flex items-center p-2 rounded-lg bg-c3/50 hover:bg-c3/85 transition-all ease-in-out duration-600 ${isHovered && !isMobile ? "gap-2 bg-c3/85" : isHovered && isMobile ? "gap-0 bg-c3/85" : "gap-0"}`}
-  // 			onMouseEnter={() => {
-  // 				setIsHovered(true);
-  // 			}}
-  // 			onMouseLeave={() => {
-  // 				setIsHovered(false);
-  // 			}}
-  // 			onClick={() => dispatch(setTheme())}
-  // 		>
-  // 			<span
-  // 				className={`${isHovered && !isMobile ? "" : "w-0 text-transparent"} font-bold over whitespace-nowrap overflow-hidden `}
-  // 			>
-  // 				{`${theme === Theme.DARK ? "Light Mode" : "DARK MODE"}`}
-  // 			</span>
-  // 			<img
-  // 				src={`/icons/${theme === Theme.DARK ? "light" : "dark"}.svg`}
-  // 				alt=""
-  // 				width={25}
-  // 			/>
-  // 		</button>
-  // 	);
+  // const QueueListButton = () => {
+  //   const [isHovered, setIsHovered] = useState(false);
+
+  //   return (
+  //     <button
+  //       className={`cursor-pointer flex items-center p-2 rounded-lg bg-c3/50 hover:bg-c3/85 transition-all ease-in-out duration-600 ${isHovered && !isMobile ? "gap-2 bg-c3/85" : isHovered && isMobile ? "gap-0 bg-c3/85" : "gap-0"}`}
+  //       onMouseEnter={() => {
+  //         setIsHovered(true);
+  //       }}
+  //       onMouseLeave={() => {
+  //         setIsHovered(false);
+  //       }}
+  //     >
+  //       <span
+  //         className={`${isHovered && !isMobile ? "" : "w-0 text-transparent"} font-bold over whitespace-nowrap overflow-hidden `}
+  //       >
+  //         Queue
+  //       </span>
+  //       <img src="/icons/rocket.svg" alt="" width={25} />
+  //     </button>
+  //   );
   // };
 
-  const QueueListButton = () => {
-    const [isHovered, setIsHovered] = useState(false);
+  // const ShowSettingsButton = () => {
+  //   const [isHovered, setIsHovered] = useState(false);
 
-    return (
-      <button
-        className={`cursor-pointer flex items-center p-2 rounded-lg bg-c3/50 hover:bg-c3/85 transition-all ease-in-out duration-600 ${isHovered && !isMobile ? "gap-2 bg-c3/85" : isHovered && isMobile ? "gap-0 bg-c3/85" : "gap-0"}`}
-        onMouseEnter={() => {
-          setIsHovered(true);
-        }}
-        onMouseLeave={() => {
-          setIsHovered(false);
-        }}
-      >
-        <span
-          className={`${isHovered && !isMobile ? "" : "w-0 text-transparent"} font-bold over whitespace-nowrap overflow-hidden `}
-        >
-          Queue
-        </span>
-        <img src="/icons/rocket.svg" alt="" width={25} />
-      </button>
-    );
-  };
-
-  const ShowSettingsButton = () => {
-    const [isHovered, setIsHovered] = useState(false);
-
-    return (
-      <button
-        className={`cursor-pointer flex items-center p-2 rounded-lg bg-c3/50 hover:bg-c3/85 transition-all ease-in-out duration-600 ${isHovered && !isMobile ? "gap-2 bg-c3/85" : isHovered && isMobile ? "gap-0 bg-c3/85" : "gap-0"}`}
-        onMouseEnter={() => {
-          setIsHovered(true);
-        }}
-        onMouseLeave={() => {
-          setIsHovered(false);
-        }}
-      >
-        <span
-          className={`${isHovered && !isMobile ? "" : "w-0 text-transparent"} font-bold over whitespace-nowrap overflow-hidden `}
-        >
-          Settings
-        </span>
-        <img src="/icons/cog.svg" alt="" width={25} />
-      </button>
-    );
-  };
+  //   return (
+  //     <button
+  //       className={`cursor-pointer flex items-center p-2 rounded-lg bg-c3/50 hover:bg-c3/85 transition-all ease-in-out duration-600 ${isHovered && !isMobile ? "gap-2 bg-c3/85" : isHovered && isMobile ? "gap-0 bg-c3/85" : "gap-0"}`}
+  //       onMouseEnter={() => {
+  //         setIsHovered(true);
+  //       }}
+  //       onMouseLeave={() => {
+  //         setIsHovered(false);
+  //       }}
+  //     >
+  //       <span
+  //         className={`${isHovered && !isMobile ? "" : "w-0 text-transparent"} font-bold over whitespace-nowrap overflow-hidden `}
+  //       >
+  //         Settings
+  //       </span>
+  //       <img src="/icons/cog.svg" alt="" width={25} />
+  //     </button>
+  //   );
+  // };
 
   // const Reports = () => {
   // 	const [isHovered, setIsHovered] = useState(false);
@@ -252,8 +252,8 @@ export default function GlobalNavigation() {
       </div>
       <div className="flex flex-col items-end gap-2">
         {/* <ThemeTogglerButton /> */}
-        <ShowSettingsButton />
-        <QueueListButton />
+        {/* <ShowSettingsButton /> */}
+        <ThemeTogglerButton />
         <LogoutButton />
       </div>
     </div>
