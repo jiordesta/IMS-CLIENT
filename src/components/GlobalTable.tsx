@@ -1,8 +1,7 @@
 import { type Dispatch, type SetStateAction } from "react";
 import DatePicker from "./inputs/DatePicker";
-import SelectInput from "./inputs/SelectInput";
-import { GlobalStatus, HEADERTYPES } from "../libs/enums";
-import { enumToArray, getValueByPath } from "../libs/utils";
+import { HEADERTYPES } from "../libs/enums";
+import { getValueByPath } from "../libs/utils";
 
 type GlobalTableProps = {
   data: any;
@@ -34,7 +33,6 @@ export default function GlobalTable({
   filters,
   setFilters,
   inputUnits,
-  shops,
   selected = [],
   setSelected,
   done,
