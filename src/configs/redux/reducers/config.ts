@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { getFromStorage } from "../../../libs/storage";
 
 export const Theme = {
-  LIGHT: "light",
+  LIGHT: "dark",
   DARK: "dark",
 };
 
