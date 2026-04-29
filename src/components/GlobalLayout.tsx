@@ -30,7 +30,6 @@ type GlobalLayoutProps = {
 export default function GlobalLayout({
   children,
   isAuthenticationRequired,
-  showLoader,
   showNavigation,
 }: GlobalLayoutProps) {
   const dispatch = useDispatch<AppDispatch>();
