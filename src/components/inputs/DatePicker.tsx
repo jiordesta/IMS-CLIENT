@@ -46,7 +46,13 @@ export default function DatePicker({
     if (disabled) return;
 
     const selected = new Date(
-      Date.UTC(currentMonth.getFullYear(), currentMonth.getMonth(), day),
+      currentMonth.getFullYear(),
+      currentMonth.getMonth(),
+      day,
+      12,
+      0,
+      0,
+      0,
     );
 
     updateFormField(dkey, selected, setter);

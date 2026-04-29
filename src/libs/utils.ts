@@ -38,6 +38,19 @@ export function isValidISODateTime(value: string): boolean {
   return !isNaN(date.getTime());
 }
 
+export function getNewDate() {
+  const now = new Date();
+  return new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    12,
+    0,
+    0,
+    0,
+  );
+}
+
 export function getValueByPath<T = any>(
   obj: T,
   path: string,

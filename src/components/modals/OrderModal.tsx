@@ -7,6 +7,7 @@ import FastOrderInput from "../inputs/FastOrderInput";
 import { fetchMenu } from "../../configs/redux/reducers/order";
 import DatePicker from "../inputs/DatePicker";
 import toast from "react-hot-toast";
+import { getNewDate } from "../../libs/utils";
 
 type OrderModalProps = {
   action: ModalAction;
@@ -19,7 +20,7 @@ export default function OrderModal({ action, payload }: OrderModalProps) {
     items: [],
     orderDate: payload?.order?.orderDate
       ? new Date(payload?.order?.orderDate)
-      : new Date(),
+      : getNewDate(),
   };
 
   const { closeModal } = useModal();

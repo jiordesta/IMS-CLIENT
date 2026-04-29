@@ -12,6 +12,7 @@ import GlobalTable from "../GlobalTable";
 import { HEADERTYPES, OrderStatus } from "../../libs/enums";
 import { fetchAllShops } from "../../configs/redux/reducers/shop";
 import toast from "react-hot-toast";
+import { getNewDate } from "../../libs/utils";
 
 type OrderTabProps = {
   setShowLoading: Dispatch<SetStateAction<boolean>>;
@@ -27,14 +28,9 @@ export default function Orders({}: OrderTabProps) {
   const { openModal } = useModal();
   const [isLoading, setLoading] = useState(false);
 
-  const today = new Date();
-  const utcDate = new Date(
-    Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()),
-  );
-
   const [filters, setFilters] = useState({
     status: OrderStatus.PENDING,
-    date: utcDate,
+    date: getNewDate(),
   });
 
   const { shops } = useSelector((state: RootState) => state.shop);
