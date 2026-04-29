@@ -27,8 +27,14 @@ export default function Orders({}: OrderTabProps) {
   const { openModal } = useModal();
   const [isLoading, setLoading] = useState(false);
 
+  const today = new Date();
+  const utcDate = new Date(
+    Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()),
+  );
+
   const [filters, setFilters] = useState({
     status: OrderStatus.PENDING,
+    date: utcDate,
   });
 
   const { shops } = useSelector((state: RootState) => state.shop);
