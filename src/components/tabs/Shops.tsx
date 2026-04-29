@@ -11,7 +11,7 @@ type ShopTabProps = {
   setShowLoading: Dispatch<SetStateAction<boolean>>;
 };
 
-export default function Shops({ setShowLoading }: ShopTabProps) {
+export default function Shops({}: ShopTabProps) {
   const [refresh, setRefresh] = useState(false);
   const [selected, setSelected] = useState<number[]>([]);
   const dispatch = useDispatch<AppDispatch>();
@@ -19,6 +19,7 @@ export default function Shops({ setShowLoading }: ShopTabProps) {
   const { accessToken } = useSelector((state: RootState) => state.auth);
   const { shops } = useSelector((state: RootState) => state.shop);
   const [isSelectedAll, setIsSelectedAll] = useState(false);
+  const [isLoading, setLoading] = useState(false);
 
   const handleSelect = (productId: number) => {
     if (selected.includes(productId)) {
@@ -84,9 +85,9 @@ export default function Shops({ setShowLoading }: ShopTabProps) {
 
   useEffect(() => {
     if (!accessToken) return;
-    setShowLoading(true);
+    setLoading(true);
     dispatch(fetchAllShops({ token: accessToken })).then(() =>
-      setShowLoading(false),
+      setLoading(false),
     );
   }, [accessToken, refresh]);
 
@@ -126,6 +127,7 @@ export default function Shops({ setShowLoading }: ShopTabProps) {
       headers={headers}
       add={handleCreateShop}
       refresh={handleTableRefresh}
+      isLoading={isLoading}
     />
   );
 }

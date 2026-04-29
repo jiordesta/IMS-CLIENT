@@ -15,7 +15,7 @@ type DeliveryTabProps = {
   setShowLoading: Dispatch<SetStateAction<boolean>>;
 };
 
-export default function Deliveries({ setShowLoading }: DeliveryTabProps) {
+export default function Deliveries({}: DeliveryTabProps) {
   const [refresh, setRefresh] = useState(false);
   const [selected, setSelected] = useState<number[]>([]);
   const [isSelectedAll, setIsSelectedAll] = useState(false);
@@ -23,6 +23,7 @@ export default function Deliveries({ setShowLoading }: DeliveryTabProps) {
   const { openModal } = useModal();
   const { accessToken } = useSelector((state: RootState) => state.auth);
   const { deliveries } = useSelector((state: RootState) => state.delivery);
+  const [isLoading, setLoading] = useState(false);
 
   const handleSelect = (productId: number) => {
     if (selected.includes(productId)) {
@@ -64,9 +65,9 @@ export default function Deliveries({ setShowLoading }: DeliveryTabProps) {
       col: 1,
     },
     {
-      label: "Product Name",
+      label: "Item",
       dkey: "productName",
-      col: 4,
+      col: 3,
     },
     {
       label: "Brand",
@@ -74,9 +75,9 @@ export default function Deliveries({ setShowLoading }: DeliveryTabProps) {
       col: 4,
     },
     {
-      label: "Quantity",
+      label: "qty",
       dkey: "quantity",
-      col: 4,
+      col: 2,
     },
     {
       label: "Date",
@@ -94,9 +95,9 @@ export default function Deliveries({ setShowLoading }: DeliveryTabProps) {
 
   useEffect(() => {
     if (!accessToken) return;
-    setShowLoading(true);
+    setLoading(true);
     dispatch(fetchAllDeliveries({ token: accessToken })).then(() =>
-      setShowLoading(false),
+      setLoading(false),
     );
   }, [accessToken, refresh]);
 
@@ -107,18 +108,12 @@ export default function Deliveries({ setShowLoading }: DeliveryTabProps) {
   const handleNewDelivery = () => {
     const callBack = async (payload: any) => {
       if (!accessToken) return;
-      dispatch(
+      return dispatch(
         createDelivery({
           token: accessToken,
           payload: payload,
         }),
-      ).then((res: any) => {
-        if (res.error) {
-          toast.error(res.error.message);
-        } else {
-          toast.success("Done Successfully");
-        }
-
+      ).then(() => {
         setRefresh(!refresh);
       });
     };
@@ -126,6 +121,8 @@ export default function Deliveries({ setShowLoading }: DeliveryTabProps) {
     openModal(ModalType.DELIVERY, ModalAction.CREATE, {
       callBack: callBack,
       title: "CREATE DELIVERY",
+      success: "Created",
+      error: "Failed to create",
     });
   };
 
@@ -137,19 +134,13 @@ export default function Deliveries({ setShowLoading }: DeliveryTabProps) {
 
       const callBack = async (payload: any, id?: number) => {
         if (!accessToken) return;
-        dispatch(
+        return dispatch(
           updateDelivery({
             token: accessToken,
             payload: payload,
             id: id,
           }),
-        ).then((res: any) => {
-          if (res.error) {
-            toast.error(res.error.message);
-          } else {
-            toast.success("Done Successfully");
-          }
-
+        ).then(() => {
           setRefresh(!refresh);
         });
       };
@@ -159,19 +150,20 @@ export default function Deliveries({ setShowLoading }: DeliveryTabProps) {
       openModal(ModalType.DELIVERY, ModalAction.UPDATE, {
         delivery: delivery,
         callBack: callBack,
+        error: "Failed to update",
+        success: "Updated",
       });
     }
   };
 
   return (
-    <div className="h-full">
-      <GlobalTable
-        data={deliveries}
-        headers={headers}
-        add={handleNewDelivery}
-        refresh={handleTableRefresh}
-        edit={handleEditDelivery}
-      />
-    </div>
+    <GlobalTable
+      data={deliveries}
+      headers={headers}
+      add={handleNewDelivery}
+      refresh={handleTableRefresh}
+      edit={handleEditDelivery}
+      isLoading={isLoading}
+    />
   );
 }

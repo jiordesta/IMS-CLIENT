@@ -6,6 +6,7 @@ import SelectInput from "../inputs/SelectInput";
 import FastOrderInput from "../inputs/FastOrderInput";
 import { fetchMenu } from "../../configs/redux/reducers/order";
 import DatePicker from "../inputs/DatePicker";
+import toast from "react-hot-toast";
 
 type OrderModalProps = {
   action: ModalAction;
@@ -14,17 +15,11 @@ type OrderModalProps = {
 
 export default function OrderModal({ action, payload }: OrderModalProps) {
   const orderForm = {
-    //orderDate: new Date(),
-    //status: payload?.orderDetails?.status,
-    //type: payload?.orderDetails?.type,
-    userId: payload?.shopDetails?.shopId,
+    userId: payload?.order?.userId,
     items: [],
-    orderDate: new Date(),
-    // payload?.orderItems?.map((item: any) => ({
-    //   id: item.id,
-    //   productId: item.productId,
-    //   quantity: item.quantity,
-    // })) || [],
+    orderDate: payload?.order?.orderDate
+      ? new Date(payload?.order?.orderDate)
+      : new Date(),
   };
 
   const { closeModal } = useModal();
@@ -41,14 +36,19 @@ export default function OrderModal({ action, payload }: OrderModalProps) {
 
   const handleCallBackCall = async () => {
     setLoading(true);
-    await payload?.callBack(form, payload?.product?.id).then(() => {
+
+    try {
+      await payload?.callBack(form, payload?.order?.id);
+      toast.success(payload?.success);
       closeModal();
+    } catch (err) {
+      toast.error(payload?.error);
+    } finally {
       setLoading(false);
-    });
+    }
   };
 
   const [activeInput, setActiveInput] = useState<any>();
-
   return (
     <div className="w-full h-full relative flex flex-col justify-center items-center gap-2 p-2">
       <div className="w-full md:w-1/2 lg:w-1/4 bg-c2 p-2 text-c4 rounded-lg relative">
@@ -76,6 +76,7 @@ export default function OrderModal({ action, payload }: OrderModalProps) {
                     value={form}
                     setter={setForm}
                     item={item}
+                    orderItems={payload?.order?.orderItems}
                     activeInput={activeInput}
                     setActiveInput={setActiveInput}
                   />
@@ -102,7 +103,7 @@ export default function OrderModal({ action, payload }: OrderModalProps) {
         </div>
         {isLoading && (
           <div className="w-full h-full bg-black/25 rounded-lg inset-0 absolute flex justify-center items-center">
-            <img src="/icons/loading.svg" alt="" width={75} />
+            <img src="/icons/loading2.svg" alt="" width={75} />
           </div>
         )}
       </div>

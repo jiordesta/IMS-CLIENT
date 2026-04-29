@@ -6,6 +6,7 @@ import NumberInput from "../inputs/NumberInput";
 import SelectInput from "../inputs/SelectInput";
 import { fetchAllProducts } from "../../configs/redux/reducers/product";
 import TextInput from "../inputs/TextInput";
+import toast from "react-hot-toast";
 
 type DeliveryModalProps = {
   action: ModalAction;
@@ -46,10 +47,16 @@ export default function DeliveryModal({ action, payload }: DeliveryModalProps) {
 
   const handleCallBackCall = async () => {
     setLoading(true);
-    payload?.callBack(form, payload?.delivery?.id).then(() => {
+
+    try {
+      await payload?.callBack(form, payload?.delivery?.id);
+      toast.success(payload?.success);
       closeModal();
+    } catch (err) {
+      toast.error(payload?.error);
+    } finally {
       setLoading(false);
-    });
+    }
   };
 
   return (
@@ -103,8 +110,8 @@ export default function DeliveryModal({ action, payload }: DeliveryModalProps) {
           </div>
         </div>
         {isLoading && (
-          <div className="w-full h-full bg-black/25 rounded-lg inset-0 absolute flex justify-center items-center">
-            <img src="/icons/loading.svg" alt="" width={75} />
+          <div className="w-full h-full bg-c1/50 rounded-lg inset-0 absolute flex justify-center items-center">
+            <img src="/icons/loading2.svg" alt="" width={75} />
           </div>
         )}
       </div>

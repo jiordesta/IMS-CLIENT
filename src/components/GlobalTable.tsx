@@ -20,6 +20,7 @@ type GlobalTableProps = {
   shops?: any[];
   selected?: any[];
   setSelected?: Dispatch<SetStateAction<any[]>>;
+  isLoading: boolean;
 };
 
 export default function GlobalTable({
@@ -36,6 +37,7 @@ export default function GlobalTable({
   selected = [],
   setSelected,
   done,
+  isLoading,
 }: GlobalTableProps) {
   const Item = ({ item }: any) => {
     return (
@@ -81,8 +83,17 @@ export default function GlobalTable({
     return (
       <div className="flex gap-2 justify-start items-center w-full h-full">
         {refresh && (
-          <button className="cursor-pointer" onClick={refresh}>
-            <img src="/icons/refresh.svg" width={30} alt="" />
+          <button
+            className={`${isLoading ? "cursor-not-allowed" : "cursor-pointer"}`}
+            disabled={isLoading}
+            onClick={refresh}
+          >
+            <img
+              src="/icons/refresh.svg"
+              className={`${isLoading && "spin"}`}
+              width={30}
+              alt=""
+            />
           </button>
         )}
         {add && (

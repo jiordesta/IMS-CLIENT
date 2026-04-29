@@ -16,7 +16,7 @@ type ProductTabProps = {
   setShowLoading: Dispatch<SetStateAction<boolean>>;
 };
 
-export default function Products({ setShowLoading }: ProductTabProps) {
+export default function Products({}: ProductTabProps) {
   const [refresh, setRefresh] = useState(false);
   const [selected, setSelected] = useState<number[]>([]);
   const [isSelectedAll, setIsSelectedAll] = useState(false);
@@ -24,6 +24,7 @@ export default function Products({ setShowLoading }: ProductTabProps) {
   const { openModal } = useModal();
   const { accessToken } = useSelector((state: RootState) => state.auth);
   const { products } = useSelector((state: RootState) => state.product);
+  const [isLoading, setLoading] = useState(false);
 
   const handleSelect = (productId: number) => {
     if (selected.includes(productId)) {
@@ -59,7 +60,7 @@ export default function Products({ setShowLoading }: ProductTabProps) {
     {
       label: "product",
       dkey: "productName",
-      col: 6,
+      col: 2,
     },
     {
       label: "other names",
@@ -70,9 +71,9 @@ export default function Products({ setShowLoading }: ProductTabProps) {
 
   useEffect(() => {
     if (!accessToken) return;
-    setShowLoading(true);
+    setLoading(true);
     dispatch(fetchAllProducts({ token: accessToken })).then(() => {
-      setShowLoading(false);
+      setLoading(false);
     });
   }, [accessToken, refresh]);
 
@@ -189,6 +190,7 @@ export default function Products({ setShowLoading }: ProductTabProps) {
         add={handleCreateProduct}
         del={handleDeleteProduct}
         edit={handleUpdateProduct}
+        isLoading={isLoading}
       />
     </div>
   );

@@ -4,6 +4,7 @@ import {
   createOrder,
   deleteOrder,
   fetchOrdersByDate,
+  updateOrder,
 } from "../../configs/redux/reducers/order";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../configs/redux/store";
@@ -16,7 +17,7 @@ type OrderTabProps = {
   setShowLoading: Dispatch<SetStateAction<boolean>>;
 };
 
-export default function Orders({ setShowLoading }: OrderTabProps) {
+export default function Orders({}: OrderTabProps) {
   const [refresh, setRefresh] = useState(false);
   const [selected, setSelected] = useState<number[]>([]);
   const [isSelectedAll, setIsSelectedAll] = useState(false);
@@ -24,6 +25,7 @@ export default function Orders({ setShowLoading }: OrderTabProps) {
   const { accessToken } = useSelector((state: RootState) => state.auth);
   const { orders } = useSelector((state: RootState) => state.order);
   const { openModal } = useModal();
+  const [isLoading, setLoading] = useState(false);
 
   const [filters, setFilters] = useState({
     status: OrderStatus.PENDING,
@@ -112,7 +114,7 @@ export default function Orders({ setShowLoading }: OrderTabProps) {
     {
       label: "Time",
       dkey: "orderDate",
-      col: 4,
+      col: 2,
       type: "time",
     },
     {
@@ -133,14 +135,14 @@ export default function Orders({ setShowLoading }: OrderTabProps) {
 
   useEffect(() => {
     if (!accessToken) return;
-    setShowLoading(true);
+    setLoading(true);
     dispatch(fetchAllShops({ token: accessToken }));
     dispatch(
       fetchOrdersByDate({
         payload: filters,
         token: accessToken,
       }),
-    ).then(() => setShowLoading(false));
+    ).then(() => setLoading(false));
   }, [accessToken, refresh, filters]);
 
   const handleDeleteOrder = () => {
@@ -153,21 +155,12 @@ export default function Orders({ setShowLoading }: OrderTabProps) {
 
     const callBack = async () => {
       if (!accessToken) return;
-
-      setShowLoading(true);
-
       dispatch(
         deleteOrder({
           token: accessToken,
           payload: { orderIds },
         }),
-      ).then((res: any) => {
-        if (res.error) {
-          toast.error(res.error.message);
-        } else {
-          toast.success("Deleted Successfully");
-        }
-        setShowLoading(false);
+      ).then(() => {
         setRefresh(!refresh);
       });
     };
@@ -175,37 +168,66 @@ export default function Orders({ setShowLoading }: OrderTabProps) {
     openModal(ModalType.CONFIRMATION, ModalAction.CONFIRM, {
       title: `DELETE ORDER${selected.length > 1 ? "S" : ""}?`,
       callBack: callBack,
+      error: "Failed to delete",
+      success: "Deleted",
     });
   };
 
   const handleCreateOrder = () => {
     const callBack = async (payload: any) => {
       if (!accessToken) return;
-      setShowLoading(true);
-      dispatch(
+      return dispatch(
         createOrder({
           token: accessToken,
           payload: payload,
         }),
-      ).then((res: any) => {
-        if (res.error) {
-          toast.error(res.error.message);
-        } else {
-          toast.success("Order Placed Successfully");
-        }
-        setShowLoading(false);
+      ).then(() => {
         setRefresh(!refresh);
       });
     };
 
-    openModal(ModalType.ORDER, ModalAction.DELETE, {
+    openModal(ModalType.ORDER, ModalAction.CREATE, {
       callBack: callBack,
       title: "DELETE ORDER?",
+      error: "Failed to create",
+      success: "Created",
     });
   };
 
   const handleTableRefresh = () => {
     setRefresh(!refresh);
+  };
+
+  const handleUpdateOrder = () => {
+    if (!accessToken) return;
+
+    const callBack = async (payload?: any, id?: number) => {
+      if (!accessToken) return;
+
+      dispatch(
+        updateOrder({
+          token: accessToken,
+          payload: payload,
+          id: id,
+        }),
+      ).then(() => {
+        setRefresh(!refresh);
+      });
+    };
+
+    if (selected.length != 1) {
+      toast.error("Please select only one order");
+    } else {
+      const order = orders.find((order) => order.id === selected[0]);
+
+      openModal(ModalType.ORDER, ModalAction.UPDATE, {
+        callBack: callBack,
+        title: "UPDATE ORDER",
+        order: order,
+        error: "Failed to update",
+        success: "Updated",
+      });
+    }
   };
 
   return (
@@ -216,8 +238,10 @@ export default function Orders({ setShowLoading }: OrderTabProps) {
       refresh={handleTableRefresh}
       del={handleDeleteOrder}
       setFilters={setFilters}
+      edit={handleUpdateOrder}
       filters={filters}
       shops={shops}
+      isLoading={isLoading}
     />
   );
 }

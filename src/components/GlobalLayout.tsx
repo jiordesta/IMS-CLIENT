@@ -70,7 +70,7 @@ export default function GlobalLayout({
     const noTokenFound = !accessToken || !refreshToken;
     let from = searchParams.get("from");
 
-    if (from === "/") from = "/dashboard";
+    if (from === "/") from = "/inventory";
 
     if (noTokenFound) return;
 
@@ -144,11 +144,11 @@ export default function GlobalLayout({
             )}
           </div>
         )}
-        {showLoader && (
+        {/* {showLoader && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
             <img src="/icons/loading.svg" width={60} alt="" />
           </div>
-        )}
+        )} */}
       </main>
     </ModalContext.Provider>
   );

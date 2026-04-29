@@ -7,6 +7,7 @@ interface FastOrderInputProps {
   value: AnyForm;
   setter: any;
   activeInput: any;
+  orderItems: any;
   setActiveInput: React.Dispatch<React.SetStateAction<any>>;
 }
 
@@ -16,6 +17,7 @@ export default function FastOrderInput({
   setter,
   activeInput,
   setActiveInput,
+  orderItems,
 }: FastOrderInputProps) {
   const [isActive, setIsActive] = useState(false);
   const [wasClicked, setWasClicked] = useState(false);
@@ -24,7 +26,9 @@ export default function FastOrderInput({
 
   const itemForm = {
     itemId: id,
-    quantity: 0,
+    quantity:
+      orderItems?.find((item: any) => item.inventoryItemId === id)?.quantity ||
+      0,
     additional: [] as number[],
   };
 

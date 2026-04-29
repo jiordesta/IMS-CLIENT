@@ -5,9 +5,15 @@ interface DatePickerProps {
   value: AnyForm;
   setter: any;
   dkey: string;
+  disabled?: boolean;
 }
 
-export default function DatePicker({ value, setter, dkey }: DatePickerProps) {
+export default function DatePicker({
+  value,
+  setter,
+  dkey,
+  disabled,
+}: DatePickerProps) {
   const [open, setOpen] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const ref = useRef<HTMLDivElement>(null);
@@ -37,6 +43,8 @@ export default function DatePicker({ value, setter, dkey }: DatePickerProps) {
   ).getDay();
 
   const handleSelect = (day: number) => {
+    if (disabled) return;
+
     const selected = new Date(
       currentMonth.getFullYear(),
       currentMonth.getMonth(),

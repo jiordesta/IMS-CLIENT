@@ -11,37 +11,29 @@ import Transactions from "../components/tabs/Transactions";
 import Reports from "../components/tabs/Reports";
 
 export default function Home() {
-	const { tab } = useParams();
+  const { tab } = useParams();
 
-	const [showLoading, setShowLoading] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
 
-	return (
-		<GlobalLayout
-			isAuthenticationRequired={true}
-			showNavigation={true}
-			showLoader={showLoading}
-		>
-			{TABS.PRODUCTS === tab && (
-				<Products setShowLoading={setShowLoading} />
-			)}
-			{TABS.DELIVERIES === tab && (
-				<Deliveries setShowLoading={setShowLoading} />
-			)}
-			{TABS.INVENTORY === tab && (
-				<Inventory setShowLoading={setShowLoading} />
-			)}
-			{TABS.ORDERS === tab && (
-				<Orders setShowLoading={setShowLoading} />
-			)}
-			{TABS.SHOPS === tab && (
-				<Shops setShowLoading={setShowLoading} />
-			)}
-			{TABS.TRANSACTIONS === tab && (
-				<Transactions setShowLoading={setShowLoading} />
-			)}
-			{TABS.REPORTS === tab && (
-				<Reports setShowLoading={setShowLoading} />
-			)}
-		</GlobalLayout>
-	);
+  return (
+    <GlobalLayout
+      isAuthenticationRequired={true}
+      showNavigation={true}
+      showLoader={showLoading}
+    >
+      {TABS.PRODUCTS === tab && <Products setShowLoading={setShowLoading} />}
+      {TABS.DELIVERIES === tab && (
+        <Deliveries setShowLoading={setShowLoading} />
+      )}
+      {(TABS.INVENTORY === tab || !tab) && (
+        <Inventory setShowLoading={setShowLoading} />
+      )}
+      {TABS.ORDERS === tab && <Orders setShowLoading={setShowLoading} />}
+      {TABS.SHOPS === tab && <Shops setShowLoading={setShowLoading} />}
+      {TABS.TRANSACTIONS === tab && (
+        <Transactions setShowLoading={setShowLoading} />
+      )}
+      {TABS.REPORTS === tab && <Reports setShowLoading={setShowLoading} />}
+    </GlobalLayout>
+  );
 }
