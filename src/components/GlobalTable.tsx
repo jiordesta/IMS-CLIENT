@@ -21,6 +21,7 @@ type GlobalTableProps = {
   selected?: any[];
   setSelected?: Dispatch<SetStateAction<any[]>>;
   isLoading: boolean;
+  createReport?: () => void;
 };
 
 export default function GlobalTable({
@@ -37,6 +38,7 @@ export default function GlobalTable({
   selected = [],
   setSelected,
   done,
+  createReport,
   isLoading,
 }: GlobalTableProps) {
   const Item = ({ item }: any) => {
@@ -121,11 +123,17 @@ export default function GlobalTable({
             <img src="/icons/edit.svg" width={30} alt="" />
           </button>
         )}
+        {createReport && (
+          <button className="cursor-pointer" onClick={createReport}>
+            <img src="/icons/reports.svg" width={30} alt="" />
+          </button>
+        )}
         {filters && (
           <div className="w-69 flex gap-2 justify-center items-center">
             <DatePicker value={filters} setter={setFilters} dkey="date" />
           </div>
         )}
+        {}
         {/* {filters && (
           <div className="w-69 flex gap-2 justify-center items-center">
             <SelectInput

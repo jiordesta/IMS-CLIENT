@@ -2,12 +2,14 @@ import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../configs/redux/store";
 import {
+  createInventoryReport,
   fetchAllItems,
   fetchInventoryItemFlow,
 } from "../../configs/redux/reducers/inventory";
 import GlobalTable from "../GlobalTable";
 import { HEADERTYPES } from "../../libs/enums";
 import { ModalAction, ModalType, useModal } from "../hooks/UseModal";
+import { saveToStorage } from "../../libs/storage";
 
 type InventoryTabProps = {
   setShowLoading: Dispatch<SetStateAction<boolean>>;
@@ -163,12 +165,40 @@ export default function Inventory({}: InventoryTabProps) {
     setRefresh(!refresh);
   };
 
+  const handleCreateReport = () => {
+    if (!accessToken) return;
+
+    const callBack = async (payload: any) => {
+      if (!accessToken) return;
+      const response = await dispatch(
+        createInventoryReport({
+          token: accessToken,
+          payload,
+        }),
+      ).unwrap();
+
+      const key = new Date(payload.date).toISOString();
+
+      saveToStorage(key, response);
+
+      window.open(`/reports/${key}`, "_blank");
+    };
+
+    openModal(ModalType.REPORT, ModalAction.CREATE, {
+      callBack: callBack,
+      title: "CREATE REPORT",
+      error: "Failed to create",
+      success: "Created",
+    });
+  };
+
   return (
     <GlobalTable
       data={items}
       headers={headers}
       refresh={handleTableRefresh}
       isLoading={isLoading}
+      createReport={handleCreateReport}
     />
   );
 }

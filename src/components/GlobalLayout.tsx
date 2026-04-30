@@ -19,6 +19,7 @@ import OrderModal from "./modals/OrderModal";
 import ShopModal from "./modals/ShopModal";
 import DisplayModal from "./modals/DisplayModal";
 import toast from "react-hot-toast";
+import CreateReportModal from "./modals/CreateReportModal";
 
 type GlobalLayoutProps = {
   children: React.ReactNode;
@@ -140,6 +141,12 @@ export default function GlobalLayout({
             )}
             {modal?.type === ModalType.DISPLAY && (
               <DisplayModal action={modal.action} payload={modal.payload} />
+            )}
+            {modal?.type === ModalType.REPORT && (
+              <CreateReportModal
+                action={modal.action}
+                payload={modal.payload}
+              />
             )}
           </div>
         )}

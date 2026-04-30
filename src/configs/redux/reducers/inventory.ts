@@ -13,6 +13,10 @@ export const fetchInventoryItemFlow = newAsyncThunk(
   "/inventory/fetchinventoryitemflow",
   ApiType.GET,
 );
+export const createInventoryReport = newAsyncThunk(
+  "/inventory/createinventoryreport",
+  ApiType.GET,
+);
 
 const initialState: InventoryState = getFromStorage("inventory") || {
   items: [],

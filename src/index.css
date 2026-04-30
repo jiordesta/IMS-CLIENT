@@ -13,6 +13,18 @@
   }
 }
 
+.cellParent {
+  width: 120px;
+  padding: 4px;
+  text-align: center;
+}
+
+.cellChild {
+  width: 120px;
+  border: 1px solid #eeeeee;
+  padding: 4px;
+}
+
 .glowText {
   text-shadow: 0 0 10px;
 }
