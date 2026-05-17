@@ -16,7 +16,7 @@ export function updateFormField<T extends AnyForm, K extends keyof T>(
 ) {
   setter((prev) => ({
     ...prev,
-    [key]: typeof value === "string" ? (value.toLowerCase() as T[K]) : value,
+    [key]: typeof value === "string" ? (value as T[K]) : value,
   }));
 }
 

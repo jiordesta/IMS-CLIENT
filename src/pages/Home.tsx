@@ -9,6 +9,8 @@ import Orders from "../components/tabs/Orders";
 import Shops from "../components/tabs/Shops";
 import Transactions from "../components/tabs/Transactions";
 import Reports from "../components/tabs/Reports";
+import Admin from "../components/tabs/Admin";
+import Users from "../components/tabs/Users";
 
 export default function Home() {
   const { tab } = useParams();
@@ -34,6 +36,8 @@ export default function Home() {
         <Transactions setShowLoading={setShowLoading} />
       )}
       {TABS.REPORTS === tab && <Reports setShowLoading={setShowLoading} />}
+      {TABS.ADMIN === tab && <Admin />}
+      {TABS.USERS === tab && <Users />}
     </GlobalLayout>
   );
 }

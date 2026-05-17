@@ -26,6 +26,8 @@ export const ModalType = {
   ORDER_ITEM_UNITS: 11,
   DISPLAY: 12,
   REPORT: 13,
+  ROLE: 14,
+  PERMISSION: 15,
 } as const;
 
 export type ModalType = (typeof ModalType)[keyof typeof ModalType];

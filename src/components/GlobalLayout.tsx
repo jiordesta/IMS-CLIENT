@@ -20,6 +20,8 @@ import ShopModal from "./modals/ShopModal";
 import DisplayModal from "./modals/DisplayModal";
 import toast from "react-hot-toast";
 import CreateReportModal from "./modals/CreateReportModal";
+import RoleModal from "./modals/RoleModal";
+import PermissionModal from "./modals/PermissionModal";
 
 type GlobalLayoutProps = {
   children: React.ReactNode;
@@ -147,6 +149,12 @@ export default function GlobalLayout({
                 action={modal.action}
                 payload={modal.payload}
               />
+            )}
+            {modal?.type === ModalType.ROLE && (
+              <RoleModal action={modal.action} payload={modal.payload} />
+            )}
+            {modal?.type === ModalType.PERMISSION && (
+              <PermissionModal action={modal.action} payload={modal.payload} />
             )}
           </div>
         )}

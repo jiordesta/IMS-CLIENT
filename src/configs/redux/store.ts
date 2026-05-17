@@ -11,23 +11,27 @@ import config from "./reducers/config.ts";
 import queue from "./reducers/queue.ts";
 import report from "./reducers/report.ts";
 import { middleWare } from "./middleWare.ts";
+import role from "./reducers/role.ts";
+import permission from "./reducers/permission.ts";
 
 export const store = configureStore({
-	reducer: {
-		auth: authentication,
-		product: product,
-		inventory: inventory,
-		delivery: delivery,
-		user: user,
-		order: order,
-		shop: shop,
-		transaction: transaction,
-		config: config,
-		queue: queue,
-		report: report,
-	},
-	middleware: (getDefaultMiddleware) =>
-		getDefaultMiddleware().concat(middleWare),
+  reducer: {
+    auth: authentication,
+    product: product,
+    inventory: inventory,
+    delivery: delivery,
+    user: user,
+    order: order,
+    shop: shop,
+    transaction: transaction,
+    config: config,
+    queue: queue,
+    report: report,
+    role: role,
+    permission: permission,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(middleWare),
 });
 
 export type AppDispatch = typeof store.dispatch;

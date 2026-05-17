@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import type { AppDispatch, RootState } from "../configs/redux/store";
 import { removeTokens, removeUserInfo } from "../configs/redux/reducers/auth";
 import { ModalAction, ModalType, useModal } from "./hooks/UseModal";
-import { Device, setTheme, Theme } from "../configs/redux/reducers/config";
+import { Device } from "../configs/redux/reducers/config";
 
 export default function GlobalNavigation() {
   type NavButtonType = {
@@ -54,17 +54,19 @@ export default function GlobalNavigation() {
     //   path: "reports",
     //   icon: "/icons/reports.svg",
     // },
-    // {
-    // 	label: "Users",
-    // 	path: "users",
-    // 	icon: "/icons/users.svg",
-    // },
+    {
+      label: "Users",
+      path: "users",
+      icon: "/icons/users.svg",
+    },
     // {
     // 	label: "Shop",
     // 	path: "myshop",
     // 	icon: "/icons/shops.svg",
     // },
   ];
+
+  const { tab } = useParams();
 
   const { device } = useSelector((state: RootState) => state.config);
   const isMobile = device === Device.MOBILE;
@@ -73,8 +75,6 @@ export default function GlobalNavigation() {
     const [isActive, setIsActive] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
     const navigate = useNavigate();
-
-    const { tab } = useParams();
 
     useEffect(() => {
       if (path === tab) {
@@ -143,103 +143,39 @@ export default function GlobalNavigation() {
     );
   };
 
-  const ThemeTogglerButton = () => {
+  const CreatePermission = () => {
+    const [isActive, setIsActive] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
-    const dispatch = useDispatch<AppDispatch>();
-    const { theme } = useSelector((state: RootState) => state.config);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+      if ("admin" === tab) {
+        setIsActive(true);
+      } else {
+        setIsActive(false);
+      }
+    }, [tab]);
+
     return (
       <button
-        className={`cursor-pointer flex items-center p-2 rounded-lg bg-c3/50 hover:bg-c3/85 transition-all ease-in-out duration-600 ${isHovered && !isMobile ? "gap-2 bg-c3/85" : isHovered && isMobile ? "gap-0 bg-c3/85" : "gap-0"}`}
+        className={`cursor-pointer flex items-center p-2 transition-all ease-in-out duration-600 bg-c3/25 hover:bg-c3/75 ${(isHovered || isActive) && !isMobile ? "gap-2 bg-c3/85" : (isHovered || isActive) && isMobile ? "gap-0 bg-c3/85" : "gap-0"} rounded-lg`}
         onMouseEnter={() => {
           setIsHovered(true);
         }}
         onMouseLeave={() => {
           setIsHovered(false);
         }}
-        onClick={() => dispatch(setTheme())}
+        onClick={() => navigate("/" + "admin")}
       >
         <span
-          className={`${isHovered && !isMobile ? "" : "w-0 text-transparent"} font-bold over whitespace-nowrap overflow-hidden `}
+          className={`${(isHovered || isActive) && !isMobile ? "" : "w-0 text-transparent"} font-bold over whitespace-nowrap overflow-hidden `}
         >
-          {`${theme === Theme.DARK ? "Light Mode" : "DARK MODE"}`}
+          Admin
         </span>
-        <img
-          src={`/icons/${theme === Theme.DARK ? "light" : "dark"}.svg`}
-          alt=""
-          width={25}
-        />
+        <img src="/icons/admin.svg" alt="" width={25} />
       </button>
     );
   };
-
-  // const QueueListButton = () => {
-  //   const [isHovered, setIsHovered] = useState(false);
-
-  //   return (
-  //     <button
-  //       className={`cursor-pointer flex items-center p-2 rounded-lg bg-c3/50 hover:bg-c3/85 transition-all ease-in-out duration-600 ${isHovered && !isMobile ? "gap-2 bg-c3/85" : isHovered && isMobile ? "gap-0 bg-c3/85" : "gap-0"}`}
-  //       onMouseEnter={() => {
-  //         setIsHovered(true);
-  //       }}
-  //       onMouseLeave={() => {
-  //         setIsHovered(false);
-  //       }}
-  //     >
-  //       <span
-  //         className={`${isHovered && !isMobile ? "" : "w-0 text-transparent"} font-bold over whitespace-nowrap overflow-hidden `}
-  //       >
-  //         Queue
-  //       </span>
-  //       <img src="/icons/rocket.svg" alt="" width={25} />
-  //     </button>
-  //   );
-  // };
-
-  // const ShowSettingsButton = () => {
-  //   const [isHovered, setIsHovered] = useState(false);
-
-  //   return (
-  //     <button
-  //       className={`cursor-pointer flex items-center p-2 rounded-lg bg-c3/50 hover:bg-c3/85 transition-all ease-in-out duration-600 ${isHovered && !isMobile ? "gap-2 bg-c3/85" : isHovered && isMobile ? "gap-0 bg-c3/85" : "gap-0"}`}
-  //       onMouseEnter={() => {
-  //         setIsHovered(true);
-  //       }}
-  //       onMouseLeave={() => {
-  //         setIsHovered(false);
-  //       }}
-  //     >
-  //       <span
-  //         className={`${isHovered && !isMobile ? "" : "w-0 text-transparent"} font-bold over whitespace-nowrap overflow-hidden `}
-  //       >
-  //         Settings
-  //       </span>
-  //       <img src="/icons/cog.svg" alt="" width={25} />
-  //     </button>
-  //   );
-  // };
-
-  // const Reports = () => {
-  // 	const [isHovered, setIsHovered] = useState(false);
-
-  // 	return (
-  // 		<button
-  // 			className={`cursor-pointer flex items-center p-2 rounded-lg bg-c3/50 hover:bg-c3/85 transition-all ease-in-out duration-600 ${isHovered && !isMobile ? "gap-2 bg-c3/85" : isHovered && isMobile ? "gap-0 bg-c3/85" : "gap-0"}`}
-  // 			onMouseEnter={() => {
-  // 				setIsHovered(true);
-  // 			}}
-  // 			onMouseLeave={() => {
-  // 				setIsHovered(false);
-  // 			}}
-  // 		>
-  // 			<span
-  // 				className={`${isHovered && !isMobile ? "" : "w-0 text-transparent"} font-bold over whitespace-nowrap overflow-hidden `}
-  // 			>
-  // 				Queue
-  // 			</span>
-  // 			<img src="/icons/rocket.svg" alt="" width={25} />
-  // 		</button>
-  // 	);
-  // };
 
   return (
     <div
@@ -251,9 +187,7 @@ export default function GlobalNavigation() {
         })}
       </div>
       <div className="flex flex-col items-end gap-2">
-        {/* <ThemeTogglerButton /> */}
-        {/* <ShowSettingsButton /> */}
-        <ThemeTogglerButton />
+        <CreatePermission />
         <LogoutButton />
       </div>
     </div>
